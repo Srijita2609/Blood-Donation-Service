@@ -1,0 +1,131 @@
+<?php
+       session_start();
+?>
+
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+<h1><center>DONOR'S DATA REPORT</center></h1>
+</head>
+
+<body>
+
+  <div id="page-container" style="margin-top:50px; position: relative;min-height: 84vh;">
+    <div class="container">
+    <div id="content-wrap" style="padding-bottom:50px;">
+
+
+  <form name="needblood" action="report.php" method="post">
+
+  <div class="row">
+  <div class="col-lg-4 mb-4">
+  <div class="font-italic">Blood Group</div>
+  <div><select id="blood" name="blood" class="form-control" required>
+             <option value=""selected disabled>Select Blood Group</option>
+             <option value="O+">O+</option>
+             <option value="O-">O-</option>
+             <option value="A-">A-</option>
+             <option value="A+">A+</option>
+             <option value="B-">B-</option>
+             <option value="B+">B+</option>
+             <option value="AB-">AB-</option>
+             <option value="AB+">AB+</option>
+     </select>
+</div>
+</div>
+
+<div><input type="submit" name="submit" value="Submit" class="btn btn-primary"></div>
+</form>
+<div class="row">
+<?php
+
+if(isset($_POST['submit']))
+{
+
+  $bgs=$_POST['blood'];
+  echo 'You have chosen: ' . $bgs;
+  $conn=mysqli_connect("localhost","root","","BloodDonation") or die("Connection error");
+
+  $sql="select * from Donars where Donars.Blood_Group='{$bgs}'";
+  $result=mysqli_query($conn,$sql) or die("Query Unsuccessful.");
+    if(mysqli_num_rows($result)>0)   {
+    while($row = mysqli_fetch_assoc($result)) {
+      ?>
+
+
+          <div class="card-body">
+            <p class="card-text">
+              <b>Name of Donor : <?php echo $row['first_name']; ?></b>
+              <b><?php echo $row['last_name']; ?></b><br>
+              <b>Blood Group : </b> <b><?php echo $row['Blood_Group']; ?></b><br>
+              <b>Mobile No. : </b> <?php echo $row['PhoneNo']; ?><br>
+              <b>Email ID : </b> <?php echo $row['email']; ?><br>
+              <b>Gender : </b><?php echo $row['gender']; ?><br>
+              <b>Age : </b> <?php echo $row['age']; ?><br>
+              <b>Address : </b> <?php echo $row['address']; ?><br>
+            </p>
+          </div>
+        </div>
+  </div>
+
+  <?php
+    }
+  }
+    else
+    {
+
+        echo '<div class="alert alert-danger">No Donor Found For your search Blood group </div>';
+    }
+} 
+?>
+</div>
+</div>
+</div>
+</div>
+</body>
+
+</html>
+<?php
+
+$conn = mysqli_connect('localhost', 'root', '','BloodDonation');
+
+$sql = 'select * from Donars';
+
+$result = mysqli_query($conn, $sql);
+$r=mysqli_num_rows($result);
+print("<table border=1>");
+print("<tr><th>Donar_id</th><th>first_name</th><th>last_nam</th><th>DOB</th><th>gender</th><th>address</th><th> email </th><th> PhoneNo </th><th> Blood_Group</th><th>age</th></tr>");
+$s=0;
+if (mysqli_num_rows($result)> 0)
+        {
+            while($row = mysqli_fetch_assoc($result))
+                {
+                        echo "<tr><td>";
+                        echo $row["Donar_id"];
+                        echo "</td><td>";
+                        echo $row["first_name"];
+                        echo "</td><td>";
+                        echo $row["last_name"];
+                        echo "</td><td>";
+                        echo $row["DOB"];
+                        echo "</td><td>";
+                        echo $row["gender"];
+                        echo "</td><td>";
+                        echo $row["address"];
+                        echo "</td><td>";
+                        echo $row["email"];
+                        echo "</td><td>";
+			 echo $row["PhoneNo"];
+                        echo "</td><td>";
+                        echo $row["Blood_Group"];
+                        echo "</td><td>";
+                        echo $row["age"];
+                        echo "</td></tr>";
+               }
+      }
+print("</table>");
+?>
+
+
+
